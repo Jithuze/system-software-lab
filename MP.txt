@@ -1,0 +1,216 @@
+ADDITION 8-BIT
+
+MOV SI, 2000   ; Move the address 2000h to the source index register SI
+MOV DI, 3000   ; Move the address 3000h to the destination index register DI
+
+MOV CL, 00     ; Initialize the count register CL to 00
+MOV AL, [SI]   ; Move the byte at the memory address pointed by SI to AL
+INC SI         ; Increment the source index register SI
+MOV BL, [SI]   ; Move the byte at the updated memory address pointed by SI to BL
+ADD AL, BL     ; Add the values in AL and BL, result in AL
+JNC L1         ; Jump if no carry (CF=0) to label L1
+
+INC CL         ; Increment the count register CL
+MOV [DI], AL  (L1) ; Move the content of AL to the memory location pointed by DI
+INC DI         ; Increment the destination index register DI
+MOV [DI], CL   ; Move the content of CL to the next memory location pointed by DI
+INT 03         ; Trigger a software interrupt (breakpoint)
+
+
+---------------------------------------------------------------------------------
+
+ADDITION 16-BIT
+
+
+MOV SI, 2000   ; Move the address 2000h to the source index register SI
+MOV DI, 3000   ; Move the address 3000h to the destination index register DI
+MOV CX, 0000   ; Initialize the count register CX to 0000
+MOV AX, [SI]   ; Move the word (16 bits) at the memory address pointed by SI to AX
+ADD SI, 02     ; Increment the source index register SI by 2 to point to the next word
+MOV BX, [SI]   ; Move the word at the updated memory address pointed by SI to BX
+ADD AX, BX     ; Add the values in AX and BX, result in AX
+JNC L1         ; Jump if no carry (CF=0) to label L1
+INC CX         ; Increment the count register CX
+MOV [DI], CX  (L1) ; Move the content of CX to the memory location pointed by DI
+ADD DI, 02     ; Increment the destination index register DI by 2
+MOV [DI], CX   ; Move the content of CX to the next memory location pointed by DI
+INT 03         ; Trigger a software interrupt (breakpoint)
+
+-----------------------------------------------------------------------------------
+
+SUBTRACTION 8-BIT
+
+
+MOV SI, 2000   ; Move the address 2000h to the source index register SI
+MOV DI, 3000   ; Move the address 3000h to the destination index register DI
+MOV CL, 00     ; Initialize the count register CL to 00
+MOV AL, [SI]   ; Move the byte at the memory address pointed by SI to AL
+INC SI         ; Increment the source index register SI
+MOV BL, [SI]   ; Move the byte at the updated memory address pointed by SI to BL
+SUB AL, BL     ; Subtract the value in BL from AL, result in AL
+JNC L1         ; Jump if no carry (CF=0) to label L1
+INC CL         ; Increment the count register CL
+MOV [DI], AL  (L1) ; Move the content of AL to the memory location pointed by DI
+INC DI         ; Increment the destination index register DI
+MOV [DI], CL   ; Move the content of CL to the next memory location pointed by DI
+INT 03         ; Trigger a software interrupt (breakpoint)
+
+
+---------------------------------------------------------------------------------------
+
+
+SUBTRACTION 16-BIT
+
+
+
+MOV SI, 2000      ; Initialize source index register (SI) with 2000
+MOV DI, 3000      ; Initialize destination index register (DI) with 3000
+MOV CX, 0000      ; Initialize count register (CX) with 0000
+
+MOV AX, [SI]      ; Load 16-bit value from memory at address pointed by SI into AX
+ADD SI, 02        ; Increment SI by 2 to point to the next 16-bit value in memory
+MOV BX, [SI]      ; Load 16-bit value from the updated memory location pointed by SI into BX
+
+SUB AX, BX        ; Subtract the value in BX from the value in AX
+JNC L1            ; Jump to label L1 if no carry occurred in the subtraction
+
+INC CX            ; Increment the count register (CX)
+
+ADD DI, 02       ; Increment DI by 2 to point to the next memory location
+MOV [DI], AX  (L1) ; Store the result of the subtraction in the memory location pointed to by DI
+
+ADD DI, 02       ; Increment DI by 2 to point to the next memory location
+MOV [DI], CX      ; Store the count value in the memory location pointed to by DI
+
+INT 03            ; Software interrupt, typically used for debugging or program termination
+
+
+------------------------------------------------------------------------------------------------
+
+
+MULTIPLICATION 8-BIT
+
+
+MOV SI, 2000      ; Move the value 2000 into the source index register (SI)
+MOV DI, 3000      ; Move the value 3000 into the destination index register (DI)
+MOV AL, [SI]      ; Move the byte at the memory location pointed to by SI into AL
+INC SI            ; Increment SI to point to the next byte in memory
+MOV BL, [SI]      ; Move the byte at the updated memory location pointed to by SI into BL
+MUL BL            ; Multiply AL by BL, result in AX (AX = AL * BL)
+MOV [DI], AX      ; Move the 16-bit result of the multiplication into the memory location pointed to by DI
+INT 03            ; Software interrupt, typically used for debugging or program termination
+
+
+----------------------------------------------------------------------------------------------------
+
+MULTIPLICATION 16-BIT
+
+
+MOV SI, 2000      ; Move the value 2000 into the source index register (SI)
+MOV DI, 3000      ; Move the value 3000 into the destination index register (DI)
+MOV AX, [SI]      ; Move the 16-bit value at the memory location pointed to by SI into AX
+ADD SI, 02        ; Increment SI by 2 to point to the next 16-bit value in memory
+MOV BX, [SI]      ; Move the 16-bit value at the updated memory location pointed to by SI into BX
+MUL BX            ; Multiply AX by BX, result in DX:AX (DX = high word, AX = low word)
+MOV [DI], AX      ; Move the low word of the result into the memory location pointed to by DI
+ADD DI, 02        ; Increment DI by 2 to point to the next memory location
+MOV [DI], DX      ; Move the high word of the result into the next memory location pointed to by DI
+INT 03            ; Software interrupt, typically used for debugging or program termination
+
+
+------------------------------------------------------------------------------------------------------
+
+
+
+DIVISION 8-BIT
+
+
+MOV SI, 2000      ; Move the value 2000 into the source index register (SI)
+MOV DI, 3000      ; Move the value 3000 into the destination index register (DI)
+MOV AL, [SI]      ; Move the byte at the memory location pointed to by SI into AL
+INC SI            ; Increment SI to point to the next byte in memory
+MOV BL, [SI]      ; Move the byte at the updated memory location pointed to by SI into BL
+DIV BL            ; Divide AL by BL, result in AX (AX = AL * BL)
+MOV [DI], AX      ; Move the 16-bit result of the multiplication into the memory location pointed to by DI
+INT 03            ; Software interrupt, typically used for debugging or program termination
+
+
+----------------------------------------------------------------------------------------------------
+
+DIVISION 16-BIT
+
+
+MOV SI, 2000      ; Move the value 2000 into the source index register (SI)
+MOV DI, 3000      ; Move the value 3000 into the destination index register (DI)
+MOV AX, [SI]      ; Move the 16-bit value at the memory location pointed to by SI into AX
+ADD SI, 02        ; Increment SI by 2 to point to the next 16-bit value in memory
+MOV BX, [SI]      ; Move the 16-bit value at the updated memory location pointed to by SI into BX
+DIV BX            ; Divide AX by BX, result in DX:AX (DX = high word, AX = low word)
+MOV [DI], AX      ; Move the low word of the result into the memory location pointed to by DI
+ADD DI, 02        ; Increment DI by 2 to point to the next memory location
+MOV [DI], DX      ; Move the high word of the result into the next memory location pointed to by DI
+INT 03            ; Software interrupt, typically used for debugging or program termination
+
+
+------------------------------------------------------------------------------------------------------
+
+
+BINARY TO BCD
+
+
+MOV SI, 2000      ; Move the value 2000 into the source index register (SI)
+MOV DI, 3000      ; Move the value 3000 into the destination index register (DI)
+MOV CX, 0000      ; Initialize count register (CX) to 0000
+MOV BX, 0000      ; Initialize BX register to 0000
+MOV DX, 0000      ; Initialize DX register to 0000
+MOV AX, [SI]      ; Move the 16-bit value at the memory location pointed to by SI into AX
+
+CMP AX, 2710      ; Compare AX with 2710, sets flags for conditional jump
+JC L1             ; Jump to label L1 if AX is less than 2710
+
+L1:
+SUB AX, 2710      ; Subtract 2710 from AX
+INC CH            ; Increment the high byte of CX (CH)
+JMP L1            ; Jump to label L1
+
+CMP AX, 03E8      ; Compare AX with 03E8, sets flags for conditional jump
+JC L2             ; Jump to label L2 if AX is less than 03E8
+
+L2:
+SUB AX, 03E8      ; Subtract 03E8 from AX
+INC BL            ; Increment the low byte of BX (BL)
+JMP L2            ; Jump to label L2
+
+CMP AX, 0064      ; Compare AX with 0064, sets flags for conditional jump
+JC L3             ; Jump to label L3 if AX is less than 0064
+
+L3:
+SUB AX, 0064      ; Subtract 0064 from AX
+INC BH            ; Increment the high byte of BX (BH)
+JMP L3            ; Jump to label L3
+
+CMP AX, 000A      ; Compare AX with 000A, sets flags for conditional jump
+JC L4             ; Jump to label L4 if AX is less than 000A
+
+L4:
+SUB AX, 000A      ; Subtract 000A from AX
+INC DL            ; Increment the low byte of DX (DL)
+JMP L4            ; Jump to label L4
+
+L5:
+MOV DH, AL        ; Move the low byte of AX to DH
+MOV CL, 04        ; Move the value 04 into the count register (CL)
+SHL DL, CL        ; Shift the low byte of DX left by 4 positions
+OR DL, DH         ; Perform a bitwise OR operation between DL and DH
+SHL BL, CL        ; Shift the low byte of BX left by 4 positions
+OR BL, BH         ; Perform a bitwise OR operation between BL and BH
+
+MOV [DI], DL      ; Move the resulting low byte into the memory location pointed to by DI
+INC DI            ; Increment DI
+MOV [DI], BL      ; Move the resulting high byte into the next memory location pointed to by DI
+INC DI            ; Increment DI
+MOV [DI], CH      ; Move the count (high byte of CX) into the next memory location pointed to by DI
+
+INT 03            ; Software interrupt, typically used for debugging or program termination
+
+
