@@ -3,7 +3,7 @@
 
 void main(){
     FILE *f1,*f2,*f3,*f4;
-    char s[100],lab[30],opcode[30],opa[30],opcode1[30],opa1[30];
+    char lab[30],opcode[30],opa[30],opcode1[30],opa1[30];
 
     int locctr,x=0;
     f1 = fopen("input.txt","r");
