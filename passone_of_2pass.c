@@ -25,7 +25,7 @@ void main(){
                 x=0;
                 while (fscanf(f2,"%s%s",opcode1,opa1)!=EOF)
                 {
-                    if (strcmp(opcode,opcode1))
+                    if (strcmp(opcode,opcode1)==0)
                     {
                         x=1;
                     }
